@@ -1,5 +1,6 @@
 using EmployeeDetils_Mangement.Data;
 using EmployeeDetils_Mangement.Extension;
+using EmployeeDetils_Mangement.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+app.UseMiddleware<SwaggerBasicAuthMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
