@@ -1,1 +1,1 @@
-# EmployeeDetail_Mangement
+EmployeeDetils_Mangement
