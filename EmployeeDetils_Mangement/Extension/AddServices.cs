@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using EmployeeDetils_Mangement.Repository;
+using EmployeeDetils_Mangement.Service;
+using System.Runtime.CompilerServices;
 
 namespace EmployeeDetils_Mangement.Extension
 {
@@ -14,6 +16,7 @@ namespace EmployeeDetils_Mangement.Extension
 
             services.AddHttpClient();
 
+            services.AddScoped<IEmployeeRepository, EmployeeService>();
 
         }
     }

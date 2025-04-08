@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeDetils_Mangement.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDetils_Mangement.Data
 {
@@ -7,7 +8,8 @@ namespace EmployeeDetils_Mangement.Data
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
         }
-     
+        
+       public  DbSet<EmployeeDetail> EmployeeDetails { get; set; }
     }
  
 }

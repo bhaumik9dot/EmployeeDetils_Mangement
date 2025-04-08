@@ -2,6 +2,7 @@ using EmployeeDetils_Mangement.Data;
 using EmployeeDetils_Mangement.Extension;
 using EmployeeDetils_Mangement.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
@@ -10,7 +11,7 @@ var configuration = builder.Configuration;
 
 builder.Services.AddDbContext<AppDBContext>(option =>
 {
-    option.UseSqlServer(configuration["DefaultConnection"], option => option.EnableRetryOnFailure());
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddDependencyInjection(configuration);
