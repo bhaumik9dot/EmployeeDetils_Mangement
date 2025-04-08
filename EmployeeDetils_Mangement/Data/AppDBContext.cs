@@ -8,8 +8,9 @@ namespace EmployeeDetils_Mangement.Data
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
         }
-        
-       public  DbSet<EmployeeDetail> EmployeeDetails { get; set; }
+
+        public DbSet<EmployeeDetail> EmployeeDetails { get; set; }
+        public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
     }
- 
+
 }
