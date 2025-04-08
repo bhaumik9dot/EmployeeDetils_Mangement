@@ -3,6 +3,7 @@ using EmployeeDetils_Mangement.Helper;
 using EmployeeDetils_Mangement.Model;
 using EmployeeDetils_Mangement.Repository;
 using EmployeeDetils_Mangement.ViewModel;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
@@ -46,6 +47,19 @@ namespace EmployeeDetils_Mangement.Service
                 }
                 await _dbContext.SaveChangesAsync();
 
+
+                #region :: Using For Strored Procedure ::
+                //var idParam = new SqlParameter("@Id", (object?)employeeDetail.Id ?? DBNull.Value);
+                //var fnameParam = new SqlParameter("@FirstName", employeeDetail.FirstName ?? (object)DBNull.Value);
+                //var lnameParam = new SqlParameter("@LastName", employeeDetail.LastName ?? (object)DBNull.Value);
+                //var emailParam = new SqlParameter("@Email", employeeDetail.Email ?? (object)DBNull.Value);
+                //var phoneParam = new SqlParameter("@Phone", employeeDetail.Phone ?? (object)DBNull.Value);
+
+                //await _dbContext.Database.ExecuteSqlRawAsync(
+                //    "EXEC InsertUpdateEmployeeDetail @Id, @FirstName, @LastName, @Email, @Phone",
+                //    idParam, fnameParam, lnameParam, emailParam, phoneParam);
+                #endregion
+
                 return new BaseResponse
                 {
                     Success = false,
@@ -72,6 +86,19 @@ namespace EmployeeDetils_Mangement.Service
                                                  Phone = e.Phone,
                                                  CreatedDate = e.CreatedDate
                                              }).ToListAsync();
+
+                #region :: Using For Strored Procedure ::
+                //var result = await _dbContext.EmployeeDetails.FromSqlRaw("EXEC GetAllEmployeeDetail").AsNoTracking().ToListAsync();
+                //var employeeDetails1 = result.Select(e => new EmployeeDetailVM
+                //{
+                //    Id = e.Id,
+                //    FirstName = e.FirstName,
+                //    LastName = e.LastName,
+                //    Email = e.Email,
+                //    Phone = e.Phone,
+                //    CreatedDate = e.CreatedDate
+                //}).ToList();
+                #endregion
 
                 return new BaseResponseModel<IEnumerable<EmployeeDetailVM>>
                 {
@@ -102,6 +129,14 @@ namespace EmployeeDetils_Mangement.Service
                                                  CreatedDate = e.CreatedDate
                                              }).FirstOrDefaultAsync();
 
+                #region :: Using For Strored Procedure ::
+                //var parameter = new SqlParameter("@Id", Id);
+                //var result = await _dbContext.EmployeeDetails.FromSqlRaw("EXEC GetAllEmployeeDetailById @Id", parameter).AsNoTracking().ToListAsync();
+
+                //var res = result.FirstOrDefault(); 
+
+                #endregion
+
                 return new BaseResponseObject<EmployeeDetailVM>
                 {
                     Success = employeeDetails != null ? true : false,
@@ -118,6 +153,28 @@ namespace EmployeeDetils_Mangement.Service
         {
             try
             {
+                #region :: Using For Strored Procedure ::
+
+                //var parameter = new SqlParameter("@Id", Id);
+
+                //int result = await _dbContext.Database.ExecuteSqlRawAsync("EXEC DeleteEmployeeDetailById @Id", parameter);
+
+                //if (result == 0)
+                //{
+                //    return new BaseResponse
+                //    {
+                //        Success = false,
+                //        Message = "Employee details not found or already deleted."
+                //    };
+                //}
+
+                //return new BaseResponse
+                //{
+                //    Success = true,
+                //    Message = "Employee details deleted successfully."
+                //};
+                #endregion
+
                 var Employee = await _dbContext.EmployeeDetails.Where(x => x.Id == Id).FirstOrDefaultAsync();
                 if (Employee == null)
                 {
