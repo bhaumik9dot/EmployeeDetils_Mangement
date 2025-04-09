@@ -16,6 +16,7 @@ export class EmployeeDetailComponent {
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
+    alert("Success")
     this.loadEmployees();
   }
 

@@ -19,10 +19,8 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) { }
 
-  getAllEmployees(): Observable<Employee[]> {
-
+  getAllEmployees(): Observable<any> {
     debugger
-
-    return this.http.get<Employee[]>(`${this.apiUrl}/Get-all-Employee-Detail`);
+    return this.http.get('https://localhost:7191/Get-all-Employee-Detail');
   }
 }

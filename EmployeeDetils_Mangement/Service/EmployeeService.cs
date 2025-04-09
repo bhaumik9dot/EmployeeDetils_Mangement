@@ -119,15 +119,20 @@ namespace EmployeeDetils_Mangement.Service
             {
                 var employeeDetails = await (from e in _dbContext.EmployeeDetails
                                              where e.Id == Id
+                                             join s in _dbContext.EmployeeSalary on e.Id equals s.EmployeeId into salaryGroup
+                                             from sg in salaryGroup.DefaultIfEmpty()
+                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
                                              select new EmployeeDetailVM
                                              {
-                                                 Id = e.Id,
-                                                 FirstName = e.FirstName,
-                                                 LastName = e.LastName,
-                                                 Email = e.Email,
-                                                 Phone = e.Phone,
-                                                 CreatedDate = e.CreatedDate
+                                                 Id = g.Key.Id,
+                                                 FirstName = g.Key.FirstName,
+                                                 LastName = g.Key.LastName,
+                                                 Email = g.Key.Email,
+                                                 Phone = g.Key.Phone,
+                                                 CreatedDate = g.Key.CreatedDate,
+                                                 TotalSalary = g.Sum(x => x.Salary)
                                              }).FirstOrDefaultAsync();
+
 
                 #region :: Using For Strored Procedure ::
                 //var parameter = new SqlParameter("@Id", Id);

@@ -17,6 +17,7 @@ namespace EmployeeDetils_Mangement.Extension
             services.AddHttpClient();
 
             services.AddScoped<IEmployeeRepository, EmployeeService>();
+            services.AddScoped<IEmployeeSalaryDetailRepository, EmployeeSalaryDetailService>();
 
         }
     }
