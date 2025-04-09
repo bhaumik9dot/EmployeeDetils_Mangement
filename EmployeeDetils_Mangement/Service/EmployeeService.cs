@@ -76,15 +76,20 @@ namespace EmployeeDetils_Mangement.Service
         {
             try
             {
+
                 var employeeDetails = await (from e in _dbContext.EmployeeDetails
+                                             join s in _dbContext.EmployeeSalary on e.Id equals s.EmployeeId into SalaryGroup
+                                             from sg in SalaryGroup.DefaultIfEmpty()
+                                               group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
                                              select new EmployeeDetailVM
                                              {
-                                                 Id = e.Id,
-                                                 FirstName = e.FirstName,
-                                                 LastName = e.LastName,
-                                                 Email = e.Email,
-                                                 Phone = e.Phone,
-                                                 CreatedDate = e.CreatedDate
+                                                 Id = g.Key.Id,
+                                                 FirstName = g.Key.FirstName,
+                                                 LastName = g.Key.LastName,
+                                                 Email = g.Key.Email,
+                                                 Phone = g.Key.Phone,
+                                                 CreatedDate = g.Key.CreatedDate,
+                                                 TotalSalary = g.Sum(x => x.Salary)
                                              }).ToListAsync();
 
                 #region :: Using For Strored Procedure ::
@@ -104,7 +109,8 @@ namespace EmployeeDetils_Mangement.Service
                 {
                     Success = true,
                     Message = "Employee details retrieved successfully.",
-                    Data = employeeDetails
+                    Data = employeeDetails,
+                    TotalRecords = employeeDetails.Count()
                 };
             }
             catch (Exception)
