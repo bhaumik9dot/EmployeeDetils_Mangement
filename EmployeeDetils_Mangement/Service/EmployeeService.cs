@@ -23,10 +23,12 @@ namespace EmployeeDetils_Mangement.Service
             try
             {
 
-                var Employee = await _dbContext.EmployeeDetails.Where(x => x.Id == employeeDetail.Id).FirstOrDefaultAsync();
+                EmployeeDetail? Employee = await _dbContext.EmployeeDetails.Where(x => x.Id == employeeDetail.Id).FirstOrDefaultAsync();
+
+                string imagePath = string.Empty;
+
                 if (Employee != null)
                 {
-
                     Employee.FirstName = employeeDetail.FirstName;
                     Employee.LastName = employeeDetail.LastName;
                     Employee.Email = employeeDetail.Email;
@@ -35,7 +37,7 @@ namespace EmployeeDetils_Mangement.Service
                 }
                 else
                 {
-                    EmployeeDetail employee = new EmployeeDetail
+                    Employee = new EmployeeDetail
                     {
                         FirstName = employeeDetail.FirstName,
                         LastName = employeeDetail.LastName,
@@ -43,10 +45,35 @@ namespace EmployeeDetils_Mangement.Service
                         Phone = employeeDetail.Phone,
                         CreatedDate = DateTime.Now
                     };
-                    await _dbContext.EmployeeDetails.AddAsync(employee);
+                    await _dbContext.EmployeeDetails.AddAsync(Employee);
                 }
                 await _dbContext.SaveChangesAsync();
 
+                if (employeeDetail.ProfileImage != null && employeeDetail.ProfileImage.Length > 0)
+                {
+                    var rootFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProfileImage");
+                    var employeeFolder = Path.Combine(rootFolder, Employee.Id.ToString());
+
+                    if (!Directory.Exists(employeeFolder))
+                    {
+                        Directory.CreateDirectory(employeeFolder);
+                    }
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(employeeDetail.ProfileImage.FileName);
+                    var filePath = Path.Combine(employeeFolder, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await employeeDetail.ProfileImage.CopyToAsync(fileStream);
+                    }
+
+                    imagePath = $"/ProfileImage/{Employee.Id}/{fileName}";
+
+                    // Step 5: Update image path in DB
+                    Employee.ProfileImagePath = imagePath;
+                    _dbContext.EmployeeDetails.Update(Employee);
+                    await _dbContext.SaveChangesAsync();
+                }
 
                 #region :: Using For Strored Procedure ::
                 //var idParam = new SqlParameter("@Id", (object?)employeeDetail.Id ?? DBNull.Value);
@@ -80,7 +107,7 @@ namespace EmployeeDetils_Mangement.Service
                 var employeeDetails = await (from e in _dbContext.EmployeeDetails
                                              join s in _dbContext.EmployeeSalary on e.Id equals s.EmployeeId into SalaryGroup
                                              from sg in SalaryGroup.DefaultIfEmpty()
-                                               group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
+                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
                                              select new EmployeeDetailVM
                                              {
                                                  Id = g.Key.Id,

@@ -10,6 +10,7 @@ namespace EmployeeDetils_Mangement.Model
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+        public string? ProfileImagePath { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }

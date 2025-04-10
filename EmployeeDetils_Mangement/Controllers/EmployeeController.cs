@@ -18,7 +18,7 @@ namespace EmployeeDetils_Mangement.Controllers
         }
 
         [HttpPost("Add-Update-Employee-Detail")]
-        public async Task<ActionResult> AddUpdateEmployeeDetail([FromBody] InsertUpdateEmployeeDetail employeeDetail)
+        public async Task<ActionResult> AddUpdateEmployeeDetail([FromQuery] InsertUpdateEmployeeDetail employeeDetail)
         {
             if (employeeDetail == null)
             {
