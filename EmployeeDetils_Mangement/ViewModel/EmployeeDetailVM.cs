@@ -9,5 +9,6 @@
         public string? Phone { get; set; }
         public DateTime CreatedDate { get; set; }
         public int TotalSalary { get; set; }
+        public string? ProfileImage { get; set; }
     }
 }

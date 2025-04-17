@@ -107,7 +107,7 @@ namespace EmployeeDetils_Mangement.Service
                 var employeeDetails = await (from e in _dbContext.EmployeeDetails
                                              join s in _dbContext.EmployeeSalary on e.Id equals s.EmployeeId into SalaryGroup
                                              from sg in SalaryGroup.DefaultIfEmpty()
-                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
+                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate,e.ProfileImagePath } into g
                                              select new EmployeeDetailVM
                                              {
                                                  Id = g.Key.Id,
@@ -116,7 +116,8 @@ namespace EmployeeDetils_Mangement.Service
                                                  Email = g.Key.Email,
                                                  Phone = g.Key.Phone,
                                                  CreatedDate = g.Key.CreatedDate,
-                                                 TotalSalary = g.Sum(x => x.Salary)
+                                                 TotalSalary = g.Sum(x => x.Salary),
+                                                 ProfileImage = g.Key.ProfileImagePath
                                              }).ToListAsync();
 
                 #region :: Using For Strored Procedure ::
@@ -154,7 +155,7 @@ namespace EmployeeDetils_Mangement.Service
                                              where e.Id == Id
                                              join s in _dbContext.EmployeeSalary on e.Id equals s.EmployeeId into salaryGroup
                                              from sg in salaryGroup.DefaultIfEmpty()
-                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate } into g
+                                             group sg by new { e.Id, e.FirstName, e.LastName, e.Email, e.Phone, e.CreatedDate,e.ProfileImagePath } into g
                                              select new EmployeeDetailVM
                                              {
                                                  Id = g.Key.Id,
@@ -163,7 +164,8 @@ namespace EmployeeDetils_Mangement.Service
                                                  Email = g.Key.Email,
                                                  Phone = g.Key.Phone,
                                                  CreatedDate = g.Key.CreatedDate,
-                                                 TotalSalary = g.Sum(x => x.Salary)
+                                                 TotalSalary = g.Sum(x => x.Salary),
+                                                 ProfileImage = g.Key.ProfileImagePath
                                              }).FirstOrDefaultAsync();
 
 
